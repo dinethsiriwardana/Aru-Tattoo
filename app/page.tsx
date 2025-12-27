@@ -1,3 +1,4 @@
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { 
@@ -15,8 +16,8 @@ import {
   ExternalLink,
   CheckCircle2
 } from 'lucide-react';
-import { NAV_ITEMS, SERVICES, IMAGES, GALLERY } from './constants';
-import { getTattooIdea } from './geminiService';
+import { NAV_ITEMS, SERVICES, IMAGES, GALLERY } from '../constants';
+import { getTattooIdea } from '../geminiService';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -75,64 +76,6 @@ const Navbar = () => {
   );
 };
 
-const AIConsultant = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [prompt, setPrompt] = useState('');
-  const [response, setResponse] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleAsk = async () => {
-    if (!prompt.trim()) return;
-    setLoading(true);
-    setResponse('');
-    const result = await getTattooIdea(prompt);
-    setResponse(result);
-    setLoading(false);
-  };
-
-  return (
-    <div className="fixed bottom-8 right-8 z-[100]">
-      {isOpen && (
-        <div className="glass p-6 rounded-3xl w-80 mb-6 animate-in zoom-in slide-in-from-bottom-10 border-amber-500/30 shadow-[0_0_50px_rgba(212,175,55,0.1)]">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-serif text-amber-500 flex items-center gap-2 tracking-widest text-sm">
-              <Sparkles size={16} /> ART CONSULTANT
-            </h3>
-            <button onClick={() => setIsOpen(false)} className="text-white/50 hover:text-white transition-colors">
-              <X size={16} />
-            </button>
-          </div>
-          <p className="text-[10px] text-white/60 mb-4 uppercase tracking-widest leading-relaxed">Tell me your story or an idea, and I'll suggest a style.</p>
-          <textarea
-            className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-sm focus:outline-none focus:border-amber-500/50 mb-3 h-28 resize-none text-white transition-all placeholder:text-white/20"
-            placeholder="e.g., A phoenix rising from geometric patterns..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-          />
-          <button 
-            disabled={loading}
-            onClick={handleAsk}
-            className="w-full bg-amber-600 hover:bg-amber-500 disabled:bg-neutral-800 text-black font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-amber-900/20"
-          >
-            {loading ? 'Consulting Greatness...' : 'Generate Styles'}
-          </button>
-          {response && (
-            <div className="mt-4 p-4 bg-white/5 rounded-xl text-[11px] leading-relaxed max-h-48 overflow-y-auto text-white/90 border border-white/5">
-              {response}
-            </div>
-          )}
-        </div>
-      )}
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center text-black shadow-2xl shadow-amber-900/40 hover:scale-110 transition-transform active:scale-90 relative group"
-      >
-        <div className="absolute inset-0 rounded-full animate-ping bg-amber-500/20 group-hover:hidden" />
-        {isOpen ? <X /> : <MessageCircle />}
-      </button>
-    </div>
-  );
-};
 
 const SectionHeader = ({ subtitle, title, centered = true }: { subtitle: string, title: string, centered?: boolean }) => (
   <div className={`mb-16 ${centered ? 'text-center' : ''}`}>
@@ -141,7 +84,7 @@ const SectionHeader = ({ subtitle, title, centered = true }: { subtitle: string,
   </div>
 );
 
-const App: React.FC = () => {
+export default function Page() {
   const [bookingName, setBookingName] = useState('');
   const [isBooked, setIsBooked] = useState(false);
 
@@ -154,7 +97,6 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#050505] selection:bg-amber-500/30 scroll-smooth">
       <Navbar />
-      <AIConsultant />
 
       {/* Hero Section */}
       <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -467,6 +409,4 @@ const App: React.FC = () => {
       </footer>
     </div>
   );
-};
-
-export default App;
+}
